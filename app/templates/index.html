@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% if message %}
+<div class="error">{{ message }}</div>
+{% endif %}
+<form class="form" action="" method="post">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <p>
+    <label for="key">Ключ</label>
+    <input class="text-input" type="text" name="key">
+    </p>
+    <p>
+    <label for="text">Текст</label>
+    <input class="text-input" type="text-box" name="text">
+    </p>
+    <p>
+    <input  class="form-button" type="submit">
+    </p>
+</form>
+{% endblock %}

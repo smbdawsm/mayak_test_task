@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% if message %}
+<div class="error">{{ message }}</div>
+{% endif %}
+<form class="form" action="" method="post">
+    <p>
+    <label for="key">Ключ</label>
+    <input class="text-input" type="text" name="key">
+    </p>
+    <p>
+        <input class="form-button" type="submit">
+    </p>
+    <div>
+        <div class="textbox">
+            {{ data }}
+        </div>
+    </div>
+</form>
+{% endblock %}
