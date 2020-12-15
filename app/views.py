@@ -54,10 +54,12 @@ def server_search():
         print(address)
         if address != '':
             print(address)
-            srv = Server.objects(address=address).first()
-            for k, v in srv.to_json().items():
-                info += '\n' + k + ' : ' + v + '\n'
-            print(info)
+            try: 
+                srv = Server.objects(address=address).first()
+                for k, v in srv.to_json().items():
+                    info += '\n' + k + ' : ' + v + '\n'
+            except:
+                message = f'Have not entry: {address} in DB'
         else:
             message = 'Insert a key!'
     return render_template('server_search.html', message=message, info=info)
