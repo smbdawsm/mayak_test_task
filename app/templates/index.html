@@ -5,16 +5,17 @@
 {% endif %}
 <form class="form" action="" method="post">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <tr><p><td>
+    
+    <label for="key">Ключ</label></td><td>
+    <input class="text-input" type="text" name="key"></td></p>
+    </tr>
+    <tr><p><td>
+    <label for="text">Текст</label></td><td>
+    <input class="text-input" type="text-box" name="text"></td></p>
+    </tr>
     <p>
-    <label for="key">Ключ</label>
-    <input class="text-input" type="text" name="key">
-    </p>
-    <p>
-    <label for="text">Текст</label>
-    <input class="text-input" type="text-box" name="text">
-    </p>
-    <p>
-    <input  class="form-button" type="submit">
+    <input  class="form-button" type="submit" value="Save">
     </p>
 </form>
 {% endblock %}

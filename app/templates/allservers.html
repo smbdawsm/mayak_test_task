@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table">
+    <tr><td>Type Server</td> <td>IP address</td> <td>Location</td> <td>Description</td> <td>Full Description</td> <td>Edit</td></tr>
+{% for srv in all_srv_list %}
+<div>
+    <tr>
+    {% for k,v in srv.items() %}
+   <td> {{v}}</td>
+    {% endfor %}
+    <td><a href="/edit_server/{{ srv.host }}">Edit Server</a></td>
+    </tr>
+</div>
+{% endfor %}
+</table>
+{% endblock %}

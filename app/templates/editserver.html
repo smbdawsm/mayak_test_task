@@ -7,22 +7,22 @@
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     <p>
     <label for="key">Тип сервера</label>
-    <input class="text-input" type="text" name="type_of_server">
+    <input value="{{ info.type }}" class="text-input" type="text" name="type_of_server">
     </p>
     <p>
     <label for="text">Адрес</label>
-    <input class="text-input" type="text-box" name="address">
+    <input value="{{ info.host }}" class="text-input" type="text-box" name="address">
     </p>
     <label for="text">Расположение</label>
-    <input class="text-input" type="text-box" name="location">
+    <input value="{{ info.location }}" class="text-input" type="text-box" name="location">
     </p>
     <p>
     <label for="key">Описание</label>
-    <input class="text-input" type="text" name="description">
+    <input value="{{ info.description }}" class="text-input" type="text" name="description">
     </p>
     <p>
     <label for="text">Подробное описание</label>
-    <input class="text-input" type="text-box" name="full_description">
+    <input value="{{ info.full_description }}" class="text-input" type="text-box" name="full_description">
     </p>
     <p>
     <input  class="form-button" type="submit" value="Save">

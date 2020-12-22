@@ -29,6 +29,7 @@
 
       .form-button {
         margin-left: 60px;
+        width: 120px;
         background-color: lightblue;
       }
 
@@ -44,14 +45,37 @@
         border-width: 1px;
         text-align: left;
       }
+      .label {
+        width: 500px;
+      }
+      .navbar {
+        color: white;
+      }
+
+      .table {
+        width: 1600px;
+        border: solid;
+      }
+      TD, TH {
+      padding: 3px; 
+      border: 1px solid black; 
+      }
     </style>
   </head>
   <body>
-    <div>Test task for MayaK: 
-      <a class ="link" href="/">Input</a>
-      <a class ="link" href="/search">Search</a>
+    <div class="navbar">MayaK infrastucture: 
+      <!--
+      <a class ="link" href="/">Query</a>
+      <a class ="link" href="/search">Search by query</a>
+      -->
       <a class ="link" href="/server">Add Server</a>
+      
       <a class ="link" href="/server_search">Search Server info</a>
+      <a class ="link" href="/allservers">All servers</a>
+      <a class ="link" href="/countries">Countries</a>
+
+      <a class ="link" href="/groups">Groups of servers</a>
+
     </div>
     <hr>
     {% block content %}{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% if message %}
+<div class="error">{{ message }}</div>
+{% endif %}
+{% for k,v in text_list.items() %}
+<p> {{k}} : {{v}} </p>
+{% endfor %}
+{% endblock %}
