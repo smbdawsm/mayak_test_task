@@ -5,7 +5,10 @@
       html {
         background-color: lightskyblue;
       }
-
+      
+      .main {
+        color:brown;
+      }
       .error {
         width: 550px;
         height: 20px;
@@ -15,28 +18,34 @@
         color: black;
         background-color: #FFBABA;
       }
-
+  
       .link { 
+        
         margin-left: 5px;
         margin-right: 5px;
         color: black;
       }
-
+      .p-link {
+        padding: 6px;
+        border: solid 4px;
+        border-color: lightblue;
+      }
+  
       .form {
         margin-left: 20px;
         margin-top: 30px;
       }
-
+  
       .form-button {
         margin-left: 60px;
         width: 120px;
         background-color: lightblue;
       }
-
+  
       .text-input {
         background-color: lightcyan;
       }
-
+  
       .textbox {
         background-color: lightcyan;
         width: 500px;
@@ -51,31 +60,90 @@
       .navbar {
         color: white;
       }
-
+  
       .table {
+        border-color: lightblue;
         width: 1600px;
         border: solid;
       }
       TD, TH {
+        border-color: lightblue;
       padding: 3px; 
       border: 1px solid black; 
       }
+  
+      .select {
+        background-color: lightcyan;
+        width: 160px;
+        border: solid 2px;
+      }
+
+      .status.open:before {
+          background-color: #94E185;
+          border-color: #78D965;
+          box-shadow: 0px 0px 4px 1px #94E185;
+        }
+        
+        .status.open {
+          color: green;
+        } 
+        .status.dead:before {
+          background-color: #C9404D;
+          border-color: #C42C3B;
+          box-shadow: 0px 0px 4px 1px #C9404D;
+        }
+
+        .status.dead{
+          color: #C42C3B;
+        }
+
+        .status:before {
+          content: ' ';
+          display: inline-block;
+          width: 7px;
+          height: 7px;
+          margin-right: 10px;
+          border: 1px solid #000;
+          border-radius: 7px;
+        }
     </style>
   </head>
   <body>
-    <div class="navbar">MayaK infrastucture: 
+    <div class="navbar">
+      <span class="p-link">
+        <span class = "main">
+        MayaK infrastucture:
+      </span>
+    </span>
+       
       <!--
       <a class ="link" href="/">Query</a>
       <a class ="link" href="/search">Search by query</a>
+            <span class="p-link">
+        <a class ="link" href="/server">Add Server</a>
+      </span>
       -->
-      <a class ="link" href="/server">Add Server</a>
+      <span class="p-link">
+        <a class ="link" href="/allservers">All servers</a>
+      </span>
+
+      <span class="p-link">
+        <a class ="link" href="/countries">Countries</a>
+      </span>
       
-      <a class ="link" href="/server_search">Search Server info</a>
-      <a class ="link" href="/allservers">All servers</a>
-      <a class ="link" href="/countries">Countries</a>
+     
 
+
+
+      <span class="p-link">
       <a class ="link" href="/groups">Groups of servers</a>
-
+      </span> 
+      <span class="p-link">
+        <a class ="link" href="/server_search">Search Server info</a>
+      </span>
+      <span class="p-link">
+      <a class ="link" href="/monitor">Monitoring</a>
+    </span>
     </div>
     <hr>
     {% block content %}{% endblock %}

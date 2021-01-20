@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-{% if message %}
-<div class="error">{{ message }}</div>
-{% endif %}
-{% for k,v in text_list.items() %}
-<p> {{k}} : {{v}} </p>
+<table class="table">
+    <tr><td>Country</td> <td>Servers count</td> <td>IP address</td><td>Langs</td> <td>Edit</td></tr>
+{% for coun in text_list %}
+<div>
+    <tr>
+        {% for k, v in coun.items() %}
+        <td> {{v}}</td>
+        {% endfor %}
+        <td><a href="/edit_country/{{ coun.Location }}">Edit</a></td>
+        <td><a href="/countries/{{ coun.Location }}/delete">Delete</a></td>
+    </tr>
+</div>
 {% endfor %}
+</table>
 {% endblock %}

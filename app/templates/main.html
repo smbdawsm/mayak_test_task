@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table">
+ <tr> <td>Country</td> <td>Type</td> <td>IP address</td> <td> Description </td> <td>Status</td></tr>
+
+ {% for resp in response %}
+ <tr>
+<td>{{resp.location}}</td>
+<td>{{resp.type_server}}</td>
+<td>{{resp.ip}}</td>
+<td>{{resp.description}}</td>
+<td> <span style="margin-left: 5px;" class="status {% if resp.alive is true %} open 
+                  {% elif resp.alive is false %} dead 
+                  {% endif %}">
+                {% if resp.alive is true %} Alive 
+              {% else %} Dead 
+              {% endif %}</span></td>
+</tr>
+ {% endfor %}
+</table>
+{% endblock %}

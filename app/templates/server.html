@@ -7,14 +7,22 @@
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     <p>
     <label for="key">Тип сервера</label>
-    <input class="text-input" type="text" name="type_of_server">
+    <select name="type_of_server" class="select" id="">
+        {% for type in types %}
+        <option value="{{ type.type_of_server }}">{{ type.type_of_server }}</option>
+        {% endfor %}
+    </select>    
     </p>
     <p>
     <label for="text">Адрес</label>
     <input class="text-input" type="text-box" name="address">
     </p>
     <label for="text">Расположение</label>
-    <input class="text-input" type="text-box" name="location">
+    <select name="location" class="select" id="">
+        {% for count in countries %}
+        <option value="{{ count.name }}">{{ count.name }}</option>
+        {% endfor %}
+    </select>
     </p>
     <p>
     <label for="key">Описание</label>
