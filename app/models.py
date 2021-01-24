@@ -1,9 +1,19 @@
 from flask_mongoengine import MongoEngine
 from app import app
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
 
 db = MongoEngine()
 db.init_app(app)
 
+users_db = SQLAlchemy()
+users_db.init_app(app)
+
+class User(UserMixin, users_db.Model):
+    id = users_db.Column(users_db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    email = users_db.Column(users_db.String(100), unique=True)
+    password = users_db.Column(users_db.String(100))
+    name = users_db.Column(users_db.String(1000))
 
 class Monitor(db.Document):
 
@@ -26,7 +36,7 @@ class Type_Of_Server(db.Document):
     def synhro():
         for server in Server.objects.all():
             try:
-                types = Type_Of_Server.objects.get(name = server.type_of_server.name)
+                types = Type_Of_Server.objects.get(type_of_server = server.type_of_server.type_of_server)
                 if server not in types.servers:
                     types.servers.append(server)
                     types.save()
@@ -35,11 +45,12 @@ class Type_Of_Server(db.Document):
         return None
 
 class Server(db.Document):
+    '''Description Server class '''
+    api_key = db.StringField()
 
-
-    hash_id = db.StringField()
+    hash_id = db.StringField(unique=True)
     type_of_server = db.ReferenceField('Type_Of_Server')
-    address = db.StringField(unique=True)
+    address = db.StringField()
     location = db.ReferenceField('Country')
     description = db.StringField(default='')
     full_description = db.StringField(default='')
@@ -63,6 +74,7 @@ class Server(db.Document):
             "IP": self.address,
             "description": self.description,
             'data': self.data,
+            'api_key': self.api_key,
             'alive': Monitor.objects.get(hash_id=self.hash_id).alive
         }
         }
@@ -117,9 +129,7 @@ class Country(db.Document):
     def synhro():
         for country in Country.objects.all():
             country.servers = []
-            print(country.name)
             for srv in Server.objects.all():
-                print(srv.location.name)
                 if srv.location.name == country.name:
                     
                     country.servers.append(srv)

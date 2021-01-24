@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table">
-    <tr> <td>Type Server</td> <td>IP address</td> <td>Location</td> <td>Description</td><td>hash_id</td><td><a style="color: red;" href="/server">Add Server</a></td></tr>
+<div style="margin-left: 30px; margin-right: 30px;">
+<table class="table" >
+    <tr> <td>Type Server</td> <td>IP address</td> <td>Location</td> <td>Description</td><td>hash_id</td><td><a class="btn btn-primary" style="width: 200px;"  href="/server">Add Server</a><td></td></td></tr>
 {% for srv in all_srv_list %}
 <div>
     <tr>
     {% for k,v in srv.items() %}
    <td> {{v}}</td>
     {% endfor %}
-   <td><a href="/edit_server/{{ srv.host }}">Edit</a></td>
+   <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px;"  href="/edit_server/{{ srv.host }}">Edit</a></td>
     
-    <td><a href="/server/{{ srv.host }}/delete">Delete</a></td>
+    <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px;" href="/server/{{ srv.host }}/delete">Delete</a></td>
     </tr>
 </div>
 
 
 {% endfor %}
 </table>
+</div>
 {% endblock %}

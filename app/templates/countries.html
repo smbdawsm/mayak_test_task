@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table">
-    <tr><td>Country</td> <td>Servers count</td> <td>IP address</td><td>Langs</td> <td>Edit</td></tr>
+<div style="margin-left: 30px; margin-right: 30px;">
+<table class="table" >
+    <tr><td>Country</td> <td>Servers count</td> <td>IP address</td><td>Langs</td> <td></td> <td></td></tr>
 {% for coun in text_list %}
 <div>
     <tr>
         {% for k, v in coun.items() %}
         <td> {{v}}</td>
         {% endfor %}
-        <td><a href="/edit_country/{{ coun.Location }}">Edit</a></td>
-        <td><a href="/countries/{{ coun.Location }}/delete">Delete</a></td>
+        <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px;" href="/edit_country/{{ coun.Location }}">Edit</a></td>
+        <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px;" href="/countries/{{ coun.Location }}/delete">Delete</a></td>
     </tr>
 </div>
 {% endfor %}
 </table>
+</div>
 {% endblock %}

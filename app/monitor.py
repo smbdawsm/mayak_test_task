@@ -8,6 +8,7 @@ from rq import Queue
 from rq.decorators import job
 from app import app
 from app.models import Monitor, Server, Country
+from flask_login import login_required, current_user
 
 redis_conn = Redis()
 q = Queue(name='high', connection=redis_conn)
@@ -42,9 +43,10 @@ def monitoring_service():
 
 @app.route('/monitor', methods=['get'])
 def monitor():
+    active = 'active'
     monitoring_service()
     response = Monitor.objects.all()
-    return flask.render_template('main.html', response = response)
+    return flask.render_template('main.html', response = response, active = active, name=current_user.name)
 
 
 def get_all_server_objects():

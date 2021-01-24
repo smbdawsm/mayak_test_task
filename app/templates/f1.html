@@ -1,20 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-<div>
-    <h1>FAQ</h1>
-    <h2>API Requests</h2>
+<div style="margin-left: 30px;">
+    <!-- <h1 style="margin-left: 30px;">FAQ</h1> -->
+    <h2 style="margin-left: 30px;">API Requests</h2>
 </div>
-<div>
+<div style="margin-left: 30px;">
     <p></p>
-    <p><b>~/server/"server_name"/host"/"location"/"description" </b> ## <b>'GET</b> ## creates a Server object "</p>
-    <p><b>~/countries/"name"</b> ##  <b>'GET</b> ## creates Country object where name is a name of Country field.</p>
-    <p><b>~/groups/"type"   </b> ##  <b>'GET</b>## creates Type_Of_Server object where type is a type_of_server Server field</p>
-    <p><b> ~/langs/'short'/'full'/'name'</b>## <b>'GET</b> ## query to create Language object</p>
-    <p><b> ~/country/'name'</b> ##  <b>'GET</b>## Query shows info about Country in JSON</p>
-    <p><b> ~/langs/'name'</b> ##  <b>'GET</b>## Query shows languages in Country </p>
+    <pre class="text">#######################################
+######### Block Countries #############</pre>
+    <p><b>~/api/country/all </b> ## <b>'GET</b> ## Выводит список стран с инфраструктурой</p>
+ 
+    <p><b>~/api/country/select</b> ##  <b>'GET</b> ## Выводит инфраструктуру с поисковиками и переводчиками по стране</p>
+    <pre>{
+        "country": "...",
+    }</pre>
+    <p><b> ~/api/country/add/<country_name></b> ##  <b>'GET</b>## Создает страну </p>   
+   
+    <pre class="text">#######################################
+######### Block Servers #############</pre>
     <p><b> ~/countries/all</b> ##  <b>'GET</b>## Query returns all Countries in JSON </p>
+    <pre class="text">#######################################
+######### Block Servers #############</pre>
+    <p><b>~/groups/"type"   </b> ##  <b>'GET</b>## Создает группу для серверов where type is a type_of_server Server field</p>
+    
+
+    <pre class="text">#######################################
+######### Block Servers #############</pre>
+    <p><b> ~/api/server/all</b> ##  <b>'GET</b>##  Выдает информацию о всех серверах </p>
+
+
+    <pre class="text">#######################################
+######### Block gtnfarhub #############</pre>
+
+<p><b> ~/gtnfarhub/countries/add</b> ##  <b>'GET</b>## Создает сервер типа farhub </p>
+<p></p>
+    <pre>{
+        "server_ip": "...",
+        "api_key": "...",
+        "description": "..."
+        "hash_id": "..."
+        "data": {
+            "..."
+        }
+    }</pre>
+<p><b> ~/gtnfarhub/countries/show</b> ##  <b>'GET</b>## Показывает gtnfarhub по страна</p>
+<p></p>
+
+<p><b> ~/gtnfarhub/server/delete</b> ##  <b>'GET</b>## удаляет сервер gtnfarhub</p>
+
+    <!--<p><b> ~/api/langs/'short'/'full'/'name'</b>## <b>'GET</b> ## query to create Language object</p>
+    
+    <p><b> ~</b> ##  <b>'GET</b>## </p>
+    <p><b> ~</b> ##  <b>'GET</b>## </p>
     <p></p>
-    <p><b> ~/translate/all</b> ##  <b>'GET</b>##  returns a dict LANGS </p>
     <p><b> ~/translate_query</b> ##  <b>'GET</b>##  query to country lang. Takes input like:</p>
     <p></p>
     <pre>{
@@ -22,5 +60,5 @@
         "src_lang": "en",
         "query": "python translator free"
     }</pre>
-</div>
+</div>-->
 {% endblock %}

@@ -7,13 +7,21 @@ import requests
 import string
 import random
 
-monitoring_service()
+from flask_login import login_required, current_user
+from flask import Blueprint
+from app.models import users_db
+
+main = Blueprint('views', __name__)
+
 Country.synhro()
 Type_Of_Server.synhro()
 
+@main.route('/profile')
+def profile():
+    return 'Profile'
 
-@app.route('/', methods=['post', 'get'])
-@app.route('/allservers', methods=['get'])
+@login_required
+@main.route('/allservers', methods=['get'])
 def get_all_servers_view():
     servers = Server.objects.all()
     all_srv_list = []
@@ -21,9 +29,10 @@ def get_all_servers_view():
         for_view = srv.to_json()
         for_view.pop('data', None)
         all_srv_list.append(for_view)
-    return render_template('allservers.html', all_srv_list=all_srv_list)
+    return render_template('allservers.html', all_srv_list=all_srv_list, name=current_user.name)
 
-@app.route('/countries', methods=['post', 'get'])
+@login_required
+@main.route('/countries', methods=['post', 'get'])
 def country_view():
     Country.synhro()
     message = ''
@@ -31,61 +40,61 @@ def country_view():
     country_list = Country.objects.all()
     for country in country_list:
         text_list.append(country.to_json())
-        print(text_list)
-    print(country_list)
-    return render_template('countries.html', text_list = text_list, message = message, country_list=country_list)
+    return render_template('countries.html', text_list = text_list, message = message, country_list=country_list, name=current_user.name)
 
-@app.route('/groups', methods=['get'])
+@login_required
+@main.route('/groups', methods=['get'])
 def groups_list():
+    active = 'active'
     Type_Of_Server.synhro()
     message = ''
     text_list = {}
     groups = Type_Of_Server.objects.all()
-    print(groups)
     for group in groups:
         counter = 0
         ip_list = []
         servers = Server.objects.filter(type_of_server=group)
         try:
             for srv in servers:
-                print(srv.type_of_server.type_of_server, group.type_of_server)
                 if srv.type_of_server.type_of_server == group.type_of_server:
                     counter += 1
                     ip_list.append(srv.address)
         except:
             pass
             
-        text_list[group.type_of_server] = (counter, ip_list)    
+        text_list[group.type_of_server] = (f'count: {counter}', f'IP addresses: {ip_list}')    
 
-    return render_template('groups.html', text_list = text_list)
+    return render_template('groups.html', text_list = text_list, active = active, name=current_user.name)
 
-@app.route('/server', methods=['post', 'get'])
+@login_required
+@main.route('/server', methods=['post', 'get'])
 def server_list():
+
     types = Type_Of_Server.objects.all()
     countries = Country.objects.all()
-    color = 'aqua'
+    color = 'success'
     message = ''
     if request.method == 'POST':
         type_of_server = request.form.get('type_of_server')
         address = request.form.get('address')
         description = request.form.get('description')
-        full_description = request.form.get('full_description')
         location = request.form.get('location')
         type_server = Type_Of_Server.objects.get(type_of_server=type_of_server)
         coun = Country.objects.get(name=location)
         hash_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=24))
         if address != '':
-            srv = Server(type_of_server=type_server,address=address,description=description, location=coun, full_description=full_description, hash_id=hash_id)
+            srv = Server(type_of_server=type_server,address=address,description=description, location=coun, hash_id=hash_id)
             srv.save()
             Country.synhro()
             monitoring_service()
             message = 'success'
         else:
-            color = 'red'
+            color = 'danger'
             message = 'You must type anything!'
-    return render_template('server.html', message = message, color = color, countries = countries, types=types)
+    return render_template('server.html', message = message, color = color, countries = countries, types=types, name=current_user.name)
 
-@app.route('/edit_server/<host>', methods=['post', 'get'])
+@login_required
+@main.route('/edit_server/<host>', methods=['post', 'get'])
 def server_edit(host):
     types = Type_Of_Server.objects.all()
     countries = Country.objects.all()
@@ -94,11 +103,10 @@ def server_edit(host):
     cont = Country.objects.get(name=prev)
     #this FOR deletes old info about Country, when location Server changes
     for el in cont.servers:
-        print(el)
         if el.address == srv.address:
             cont.servers.pop(cont.servers.index(el)) 
             cont.save()
-    color = 'aqua'
+    color = 'success'
     message = ''
     info = srv.to_json()
     if request.method == 'POST':
@@ -115,34 +123,46 @@ def server_edit(host):
         srv.location = coun
         srv.full_description = full_description
         srv.save()
+        Country.synhro()
         message = 'success'
-    return render_template('editserver.html', message = message, color = color, info = info, countries = countries, types=types)
+    return render_template('editserver.html', message = message, color = color, info = info, countries = countries, types=types, name=current_user.name)
 
-@app.route('/edit_country/<name>', methods=['post', 'get'])
+'''from app.lntranslator import get_all_languages
+for k, v in get_all_languages().items():
+    lang = Language(name=v, full=k)
+    lang.save()
+'''
+@login_required
+@main.route('/edit_country/<name>', methods=['post', 'get'])
 def edit_country(name):
+    message = ''
+    color = 'success'
     langs = Language.objects.all()
     country = Country.objects.get(name=name)
     info = country.to_json()
     if request.method == 'POST':
         name = request.form.get('name')
         lang = request.form.get('lang')
-        print(lang)
-        l = Language.objects.get(name = lang)
+        try:
+            l = Language.objects.get(name = lang)
+        except Exception as err:
+            print(err)
         country.name = name
         if l not in country.langs:
             country.langs.append(l)
         country.save()
+        message = 'success'
+    return render_template('editcountry.html', langs=langs, info=info, message=message, color=color, name=current_user.name)
 
-    return render_template('editcountry.html', langs=langs, info=info)
-
-
-@app.route('/countries/<name>/delete', methods=['get'])
+@login_required
+@main.route('/countries/<name>/delete', methods=['get'])
 def delete_country_obj(name):
     country = Country.objects.get(name=name)
     country.delete()
     return render_template('delete.html')
 
-@app.route('/server/<host>/delete', methods=['get'])
+@login_required
+@main.route('/server/<host>/delete', methods=['get'])
 def delete_server_obj(host):
     
     srv = Server.objects.get(address=host)
@@ -150,34 +170,38 @@ def delete_server_obj(host):
     coun.servers.pop(srv.location.servers.index(Server.objects.get(address=srv.address)))
     coun.save()
     srv.delete()
+    Country.synhro()
     
-    return render_template('delete.html')
+    return render_template('delete.html', name=current_user.name)
 
-
-@app.route('/server_search', methods=['post', 'get'])
+@login_required
+@main.route('/server_search', methods=['post', 'get'])
 def server_search():
     info = ''
     message = ''
     if request.method == 'POST':
         address = request.form.get('address')
-        print(address)
         if address != '':
-            print(address)
             try: 
-                srv = Server.objects(address=address).first()
-                for k, v in srv.to_json().items():
+                srv = Server.objects.get(address=address)
+                for_view = srv.to_json()
+                for_view.pop('data', None)
+                for k, v in for_view.items():
                     info += '\n' + k + ' : ' + v + '\n'
-            except:
+            except Exception as err:
+                print(err)
                 message = f'Have not entry: {address} in DB'
         else:
             message = 'Insert a key!'
-    return render_template('server_search.html', message=message, info=info)
+    return render_template('server_search.html', message=message, info=info, name=current_user.name)
 
-@app.route('/faq', methods=['get'])
+@login_required
+@main.route('/faq', methods=['get'])
 def faq():
-    return render_template('f1.html')
+    return render_template('f1.html', name=current_user.name)
 
-@app.route('/parsers', methods=['get'])
+@login_required
+@main.route('/parsers', methods=['get'])
 def show_parsers():
     result = {}
     farhub_tos = Type_Of_Server.objects.get(type_of_server='gtn_farhub')

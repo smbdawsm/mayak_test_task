@@ -6,3 +6,8 @@
 ```
 chmod a+x start.sh && ./start.sh
 ```
+# Request description:
+
+- `~/api/country/all` 'get' запрос возвращает список всех стран
+- `~/api/country/<name>` 'get' запрос возвращает информацию по стране
+ доступные сервера, поисковики итд.

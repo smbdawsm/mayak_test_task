@@ -12,27 +12,28 @@ from datetime import datetime
 
 @app.route('/api/country/all', methods=['get'])
 def get_all_coutries():
+    '''Выводит список стран с инфраструктурой '''
     all_countries = Country.objects.all()
     res = {}
     for coun in all_countries:
         res[coun.name] = coun.to_json()
-    print(res)
     return json.dumps(res, indent=1, sort_keys=True, default=str)
 
 @app.route('/api/country/select', methods=['get'])
 def get_country():
+    ''' Выводит инфраструктуру с поисковиками и переводчиками по стране '''
     json_data = request.get_json(force=True)
     print(json_data['country'])
     try: 
         country = Country.objects.get(name=json_data['country'])
         response = country.to_json_on_front()
-        print(response)
         return jsonify(response)
     except Exception as err:
         return f'{datetime.now()} Incorrect Query! ERROR in app: Exception on /api/country/select [GET] \n{err}', 400
 
-@app.route("/api/country/add/<country_name>", methods=["get"])
+@app.route("/api/country/add/<country_name>", methods=["get"]) 
 def create_country(country_name):
+    '''Создает страну'''
     if country_name is None or not country_name:
         return 'Incorrect Query'
     try:
@@ -49,6 +50,7 @@ def create_country(country_name):
 
 @app.route('/api/server/all', methods=['get'])
 def get_all_servers():
+    '''Выдает информацию о всех серверах'''
     all_servers = {}
     for srv in Server.objects.all():
         all_servers[srv.hash_id] = srv.to_json()
@@ -87,6 +89,7 @@ def add_language(short, full, name):
 
 @app.route("/api/groups/<tosname>", methods=["get"])
 def create_group(tosname):
+    """Создает группу для серверов"""
     if tosname is None or not tosname:
         return 'Incorrect Query'
     tos = Type_Of_Server(type_of_server=tosname)
@@ -98,7 +101,7 @@ def create_group(tosname):
 
 @app.route("/gtnfarhub/countries/add", methods=["get"])
 def create_server():
-    
+    '''Создает сервер типа farhub '''
     json_data = request.get_json(force=True)
 
     try: 
@@ -117,7 +120,8 @@ def create_server():
         except:
             server_name = Type_Of_Server(type_of_server='gtn_farhub')
             server_name.save()
-        server = Server(type_of_server=server_name,address=json_data['server_ip'],location=coun, data = json_data['data'], description=json_data['description'], hash_id=json_data['hash_id'])
+        server = Server(type_of_server=server_name,address=json_data['server_ip'],location=coun, api_key=json_data['api_key'],
+                         data = json_data['data'], description=json_data['description'], hash_id=json_data['hash_id'])
         server.save() 
         Country.synhro()
         monitoring_service()
@@ -125,7 +129,7 @@ def create_server():
 
 @app.route('/gtnfarhub/countries/show', methods = ['get'])
 def show_gntfarhubs():
-    
+    '''Показывает gtnfarhub по странам'''
     all_countries = Country.objects.all()
     res = {}
     for coun in all_countries:
@@ -134,6 +138,7 @@ def show_gntfarhubs():
 
 @app.route('/gtnfarhub/server/delete', methods = ['get'])
 def delete_farhub():
+    '''удаляет сервер gtnfarhub'''
     json_data = request.get_json(force=True)
     try:
         srv = Server.objects.get(hash_id=json_data['hash_id'])

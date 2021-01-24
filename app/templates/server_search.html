@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 {% if message %}
-<div class="error">{{ message }}</div>
+<div class="alert alert-warning alert-dismissible fade show" style=" margin-left: 20px; max-width: 800px;" role="alert">{{ message }}</div>
 {% endif %}
-<form class="form" action="" method="post">
+<form class="form" action="" method="post" style="margin-left: 50px;">
+    
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="key">Host</label>
+    <div class="col-sm-10">
+    <input class="text-input" class="form-control" style="width: 400px;" type="text" name="address">
+    </div>
+    </div>
     <p>
-    <label for="key">Host</label>
-    <input class="text-input" type="text" name="address">
+        <input class="btn btn-primary" style="margin-left: 300px;" type="submit" value="Search">
     </p>
-    <p>
-        <input class="form-button" type="submit" value="Search">
-    </p>
-    <div>
+    <div style="margin-left: 80px;">
         <pre >
             {{ info }}
         </pre>

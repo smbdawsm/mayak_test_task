@@ -1,8 +1,21 @@
+from flask import render_template, redirect, request, jsonify
+from app import app
+import flask
 import requests
-
+from pprint import pprint
+from app.models import Language
 '''
 GET request to take all langs JSON
 '''
+'''
+@app.route('/api/lang/synchro')
+def create_langs_instances():
+  for k, v in get_all_languages().items():
+    lang = Language(name=v, full=k)
+    lang.save()
+  return 'ok', 200
+'''
+@app.route('/api/langs/all')
 def get_all_languages():
   header = {
       'Authorization' : 'a_c7JdV4d6dZbkhUkNywVLpmJfsqJXSmPE4dboafFPwOrGq2ct3ridv5DkwRnHAGASOLZcvLIoF67VKQUn'

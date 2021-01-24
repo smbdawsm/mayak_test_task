@@ -1,128 +1,112 @@
 <html>
   <head>
-    <style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <style>.select {
+      background-color: lightcyan;
+      width: 160px;
+      border: solid 2px;
+    }
 
-      html {
-        background-color: lightskyblue;
+    .status.open:before {
+        background-color: #94E185;
+        border-color: #78D965;
+        box-shadow: 0px 0px 4px 1px #94E185;
       }
       
-      .main {
-        color:brown;
-      }
-      .error {
-        width: 550px;
-        height: 20px;
-        text-align: center;
-        border: solid;
-        border-width: 1px;
-        color: black;
-        background-color: #FFBABA;
-      }
-  
-      .link { 
-        
-        margin-left: 5px;
-        margin-right: 5px;
-        color: black;
-      }
-      .p-link {
-        padding: 6px;
-        border: solid 4px;
-        border-color: lightblue;
-      }
-  
-      .form {
-        margin-left: 20px;
-        margin-top: 30px;
-      }
-  
-      .form-button {
-        margin-left: 60px;
-        width: 120px;
-        background-color: lightblue;
-      }
-  
-      .text-input {
-        background-color: lightcyan;
-      }
-  
-      .textbox {
-        background-color: lightcyan;
-        width: 500px;
-        height: auto;
-        border: solid;
-        border-width: 1px;
-        text-align: left;
-      }
-      .label {
-        width: 500px;
-      }
-      .navbar {
-        color: white;
-      }
-  
-      .table {
-        border-color: lightblue;
-        width: 1600px;
-        border: solid;
-      }
-      TD, TH {
-        border-color: lightblue;
-      padding: 3px; 
-      border: 1px solid black; 
-      }
-  
-      .select {
-        background-color: lightcyan;
-        width: 160px;
-        border: solid 2px;
+      .status.open {
+        color: green;
+      } 
+      .status.dead:before {
+        background-color: #C9404D;
+        border-color: #C42C3B;
+        box-shadow: 0px 0px 4px 1px #C9404D;
       }
 
-      .status.open:before {
-          background-color: #94E185;
-          border-color: #78D965;
-          box-shadow: 0px 0px 4px 1px #94E185;
-        }
-        
-        .status.open {
-          color: green;
-        } 
-        .status.dead:before {
-          background-color: #C9404D;
-          border-color: #C42C3B;
-          box-shadow: 0px 0px 4px 1px #C9404D;
-        }
+      .status.dead{
+        color: #C42C3B;
+      }
 
-        .status.dead{
-          color: #C42C3B;
-        }
-
-        .status:before {
-          content: ' ';
-          display: inline-block;
-          width: 7px;
-          height: 7px;
-          margin-right: 10px;
-          border: 1px solid #000;
-          border-radius: 7px;
-        }
-    </style>
+      .status:before {
+        content: ' ';
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        margin-right: 10px;
+        border: 1px solid #000;
+        border-radius: 7px;
+      }</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   </head>
   <body>
+  
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-left: 40px; ">
+      <div class="container-fluid">
+        <span class="navbar-brand">GoTrueNet Monitoring Service</span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link " aria-current="page" href="/allservers">Servers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link "  href="/countries">Countries</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link "  href="/groups">Groups of Servers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color: darkolivegreen;" aria-current="page" href="/monitor">Monitoring</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="/server_search">Server info by IP</a>
+            </li>
+
+
+            <a class="nav-link" style="padding-left: 500px;">{{name}}</a>
+
+            <li class="nav-item">
+              <a href="{{ url_for('auth.signup') }}" class="nav-link">
+                  Manage Access
+              </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link " aria-current="page" href="/faq">FAQ</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                    Logout
+                </a>
+                </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <!--
     <div class="navbar">
       <span class="p-link">
         <span class = "main">
-        MayaK infrastucture:
+        
       </span>
     </span>
        
-      <!--
+     
       <a class ="link" href="/">Query</a>
       <a class ="link" href="/search">Search by query</a>
             <span class="p-link">
         <a class ="link" href="/server">Add Server</a>
       </span>
-      -->
+      
       <span class="p-link">
         <a class ="link" href="/allservers">All servers</a>
       </span>
@@ -145,7 +129,10 @@
       <a class ="link" href="/monitor">Monitoring</a>
     </span>
     </div>
-    <hr>
+   -->
+   {% if current_user.is_authenticated %}
+
     {% block content %}{% endblock %}
+    {% endif %}
   </body>
 </html>

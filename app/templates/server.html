@@ -1,36 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
 {% if message %}
-<div class="error" style="background-color:{{color}};" >{{ message }}</div>
+<div class="alert alert-{{color}}"  style=" margin-left: 20px; max-width: 800px;" role="alert" >{{ message }}</div>
 {% endif %}
-<form class="form" action="" method="post">
+<form class="form" style="margin-left: 30px" action="" method="post">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    <p>
-    <label for="key">Тип сервера</label>
-    <select name="type_of_server" class="select" id="">
+
+
+    <div class="row mb-3">
+    <label  class="col-sm-2 col-form-label" for="key">Тип сервера</label>
+    <div class="col-sm-10">
+    <select name="type_of_server" class="form-select" style="width: 400px;" id="">
         {% for type in types %}
         <option value="{{ type.type_of_server }}">{{ type.type_of_server }}</option>
         {% endfor %}
     </select>    
-    </p>
-    <p>
-    <label for="text">Адрес</label>
-    <input class="text-input" type="text-box" name="address">
-    </p>
-    <label for="text">Расположение</label>
-    <select name="location" class="select" id="">
+    </div>
+    </div>
+
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="text">Адрес</label>
+    <div class="col-sm-10">
+    <input class="text-input" class="form-control" style="width: 400px;" type="text-box" name="address">
+    </div>
+    </div>
+
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="text">Расположение</label>
+    <div class="col-sm-10">
+    <select name="location" class="form-select" class="form-select" style="width: 400px;" id="">
         {% for count in countries %}
         <option value="{{ count.name }}">{{ count.name }}</option>
         {% endfor %}
     </select>
-    </p>
-    <p>
-    <label for="key">Описание</label>
-    <input class="text-input" type="text" name="description">
-    </p>
-    <p>
-    <label for="text">Подробное описание</label>
-    <input class="text-input" type="text-box" name="full_description">
+    </div>
+    </div>
+
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="key">Описание</label>
+    <div class="col-sm-10">
+    <input class="text-input" class="form-control" style="width: 400px;"" type="text" name="description">
+    </div>
+    </div>
+
     </p>
     <p>
     <input  class="form-button" type="submit" value="Save">

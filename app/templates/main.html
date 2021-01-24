@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table">
+<div style="margin-left: 30px; margin-right: 30px;">
+<table class="table" >
  <tr> <td>Country</td> <td>Type</td> <td>IP address</td> <td> Description </td> <td>Status</td></tr>
 
  {% for resp in response %}
@@ -18,4 +19,5 @@
 </tr>
  {% endfor %}
 </table>
+</div>
 {% endblock %}
