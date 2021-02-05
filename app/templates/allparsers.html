@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin-left: 30px; margin-right: 30px;">
+<table class="table" >
+ <tr> <td><b>Searcher</b></td> <td><b>icon</b></td> <td> <b>text</b></td> <td><b> images</b> </td> <td><b>video</b></td></tr>
+
+ {% for res in result %}
+ <tr>
+<td style="font-style: italic;">{{res.engine}}</td>
+<td><img src="{{res.icon}}" style="max-height: 60px; max-width: 60px;" alt=""></td>
+<td>{% if 'general' in res.categories %} <p style="color: green;">	&#10010;</p> 
+    {% else %} <p style="color: red">&#10008;</p> 
+    {% endif %}</td>
+<td>{% if 'images' in res.categories %} <p style="color: green;">&#10010;</p>  
+    {% else %} <p style="color: red">&#10008;</p>  
+    {% endif %}</td>
+<td>{% if 'videos' in res.categories %} <p style="color: green;"> &#10010;</p>  
+    {% else %} <p style="color: red">&#10008;</p>  
+    {% endif %}</td>
+</tr>
+ {% endfor %}
+</table>
+</div>
+{% endblock %}

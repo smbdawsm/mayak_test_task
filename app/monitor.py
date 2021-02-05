@@ -13,6 +13,13 @@ from flask_login import login_required, current_user
 redis_conn = Redis()
 q = Queue(name='high', connection=redis_conn)
 
+def get_user_name():
+    try:
+        name = current_user.name
+        return name
+    except:
+        return None
+
 @job('high', connection=redis_conn, timeout=5)
 def healthcheck(ip, port):
     try: 
@@ -46,7 +53,7 @@ def monitor():
     active = 'active'
     monitoring_service()
     response = Monitor.objects.all()
-    return flask.render_template('main.html', response = response, active = active, name=current_user.name)
+    return flask.render_template('main.html', response = response, active = active, name=get_user_name())
 
 
 def get_all_server_objects():

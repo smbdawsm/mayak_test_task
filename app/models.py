@@ -3,6 +3,7 @@ from app import app
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = MongoEngine()
 db.init_app(app)
 
@@ -24,6 +25,12 @@ class Monitor(db.Document):
     alive = db.BooleanField()
     description = db.StringField()
 
+    def to_json(self):
+        return {
+            'hash_id': self.hash_id,
+            'ip': self.ip,
+            'type_server': self.type_server,
+        }
 
 
 class Type_Of_Server(db.Document):
@@ -44,58 +51,6 @@ class Type_Of_Server(db.Document):
                 print(err)
         return None
 
-class Server(db.Document):
-    '''Description Server class '''
-    api_key = db.StringField()
-
-    hash_id = db.StringField(unique=True)
-    type_of_server = db.ReferenceField('Type_Of_Server')
-    address = db.StringField()
-    location = db.ReferenceField('Country')
-    description = db.StringField(default='')
-    full_description = db.StringField(default='')
-    data = db.DictField()
-    
-    def to_json(self):
-        return {
-            
-            "type": self.type_of_server.type_of_server,
-            "host": self.address,
-            'location': self.location.name,
-            "description": self.description,
-            'hash': self.hash_id,
-            'data': self.data
-        
-        }
-    
-    def for_farhub(self):
-        print(Monitor.objects.get(hash_id=self.hash_id).alive)
-        return { self.hash_id: {
-            "IP": self.address,
-            "description": self.description,
-            'data': self.data,
-            'api_key': self.api_key,
-            'alive': Monitor.objects.get(hash_id=self.hash_id).alive
-        }
-        }
-
-class Searcher(db.Document):
-
-    name = db.StringField(unique=True)
-    country = db.ReferenceField('Country')
-    text = db.BooleanField()
-    img = db.BooleanField()
-    video = db.BooleanField()
-
-    def to_json(self):
-        return {
-            'name': self.name,
-            'location': self.country.name,
-            'text': self.text,
-            'img': self.img,
-            'video': self.video
-        }
-
 class Country(db.Document):
 
     name = db.StringField(unique=True)
@@ -111,9 +66,9 @@ class Country(db.Document):
 
     def to_json(self):
         return {
-            'Location': self.name,
-            'Counter': len(self.servers),
-            'IP address': [srv.address for srv in self.servers],
+            'location': self.name,
+            'counter': len(self.servers),
+            'ip address': [srv.address for srv in self.servers],
             'lang': [lang.full for lang in self.langs]
         }
 
@@ -135,6 +90,83 @@ class Country(db.Document):
                     country.servers.append(srv)
                     country.save()
         return 'fin'
+
+
+class Server(db.Document):
+    '''Description Server class '''
+    api_key = db.StringField()
+
+    hash_id = db.StringField(unique=True)
+    type_of_server = db.ReferenceField('Type_Of_Server')
+    address = db.StringField()
+    location = db.ReferenceField('Country', reverse_delete_rule=db.NULLIFY)
+    description = db.StringField(default='')
+    full_description = db.StringField(default='')
+    data = db.DictField()
+    
+    def to_json(self):
+        try:
+            response = {
+            
+            "type": self.type_of_server.type_of_server,
+            "host": self.address,
+            'location': self.location.name,
+            "description": self.description,
+            'hash': self.hash_id,
+            'data': self.data
+        
+        }
+        except Exception:
+            response = {
+            
+            "type": self.type_of_server.type_of_server,
+            "host": self.address,
+            'location': self.location,
+            "description": self.description,
+            'hash': self.hash_id,
+            'data': self.data
+        
+        }
+
+        return response
+
+
+    def for_farhub(self):
+        print(Monitor.objects.get(hash_id=self.hash_id).alive)
+        return { self.hash_id: {
+            "ip": self.address,
+            "description": self.description,
+            'data': self.data,
+            'api_key': self.api_key,
+            'alive': Monitor.objects.get(hash_id=self.hash_id).alive
+        }
+        }
+
+
+
+
+class Searcher(db.Document):
+
+    engine = db.StringField(unique=True)
+    icon = db.StringField()
+    text = db.BooleanField(default=False)
+    img = db.BooleanField(default=False)
+    video = db.BooleanField(default=False)
+    cat = []
+
+    def to_json(self):
+        self.cat = []
+        if self.text == True and 'general' not in self.cat :
+            self.cat.append('general')
+        if self.img == True and 'images' not in self.cat :
+            self.cat.append('images')
+        if self.video == True and 'videos' not in self.cat:
+            self.cat.append('videos')
+        return {
+            'engine': self.engine,
+            'icon': self.icon,
+            'categories': self.cat
+        }
 
 
 class Language(db.Document):

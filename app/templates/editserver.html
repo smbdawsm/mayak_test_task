@@ -47,11 +47,16 @@
     </div>
 
     <div class="row mb-3">
-    <label class="col-sm-2 col-form-label" for="text">Подробное описание</label>
+    <label class="col-sm-2 col-form-label" for="text">Search Engines</label>
     <div class="col-sm-10">
-    <input value="{{ info.full_description }}" class="form-control" style="width: 400px;" type="text-box" name="full_description">
+    <select multiple class="form-control" name='engines' style="width: 400px;" >
+        {% for parser in parsers %}
+        <option value="{{ parser.engine }}">{{ parser.engine }}</option>
+        {% endfor %}
+    </select>
     </div>
     </div>
+
 
     <input  class="btn btn-primary" style="margin-left: 318px; width: 200px;" type="submit" value="Save">
     

@@ -4,6 +4,8 @@ from app.models import users_db
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
+import requests
+import json
 
 auth = Blueprint('auth', __name__)
 
@@ -14,14 +16,47 @@ def login_post():
     password = request.form.get('password')
     remember = True if request.form.get('remember') else False
 
-    user = User.query.filter_by(email=email).first()
+    # user = User.query.filter_by(email=email).first()
 
-    if not user or not check_password_hash(user.password, password):
+    # if not user or not check_password_hash(user.password, password):
+    #     flash('Please check your login details and try again.')
+    #     return redirect(url_for('auth.login')) # 
+    url = 'http://136.243.111.3:8000/api/auth/login?admin=1&api=54jfGJHD32dh56jcvb87'
+    try:
+        json_data = {
+            "email": email,
+            "password": password,
+            "user_data": "const"
+        }
+
+        x = requests.get(url, json=json_data)
+        t = json.loads(x.text)
+        
+        if 'success' in t:
+            data = t['user']
+            try:
+                new_user = User(email=data['email'], name=data['email'], password=generate_password_hash("1", method='sha256'))
+            
+                check_for_user = User.query.filter_by(email=data['email']).first()
+                if (check_for_user):
+                    users_db.session.delete(check_for_user)
+                    users_db.session.commit()
+                users_db.session.add(new_user)
+                users_db.session.commit()
+                login_user(new_user, remember=remember)
+            except Exception as err:
+                print(err)
+                flash('Please check your login details and try again.')
+            return redirect(url_for('views.get_all_servers_view'))
+        else:
+            flash('Please check your login details and try again.')
+    except Exception as err:
+        print(err)
         flash('Please check your login details and try again.')
-        return redirect(url_for('auth.login')) # 
+    return redirect(url_for('auth.login'))
 
-    login_user(user, remember=remember)
-    return redirect(url_for('views.get_all_servers_view'))
+
+    
 
 @auth.route('/', methods=['post', 'get'])
 @auth.route('/login')

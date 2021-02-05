@@ -8,14 +8,28 @@
  <tr>
 <td>{{resp.location}}</td>
 <td>{{resp.type_server}}</td>
-<td>{{resp.ip}}</td>
+<td>
+  {% if resp.type_server == 'gtn_farhub' and resp.ip != 'blacklisted_ip' %}
+  <a class="" href="/parsers/{{ resp.ip }}">{{resp.ip}}</a>
+  {% else %} {{resp.ip}}
+  {% endif %}
+</td>
 <td>{{resp.description}}</td>
-<td> <span style="margin-left: 5px;" class="status {% if resp.alive is true %} open 
+
+<td> 
+  {% if resp.type_server == 'gtn_farhub' %}
+   <span style="margin-left: 5px;" class="status {% if resp.alive is true %} open 
                   {% elif resp.alive is false %} dead 
                   {% endif %}">
                 {% if resp.alive is true %} Alive 
               {% else %} Dead 
-              {% endif %}</span></td>
+              {% endif %}</span>
+    {% else %}
+    <span style="margin-left: 5px;" class="status open">
+               Alive 
+              </span>
+    {% endif %}
+  </td>
 </tr>
  {% endfor %}
 </table>

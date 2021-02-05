@@ -9,8 +9,8 @@
         {% for k, v in coun.items() %}
         <td> {{v}}</td>
         {% endfor %}
-        <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px;" href="/edit_country/{{ coun.Location }}">Edit</a></td>
-        <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px;" href="/countries/{{ coun.Location }}/delete">Delete</a></td>
+        <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px; background-color:whitesmoke; color: black;" href="/edit_country/{{ coun.location }}">Edit</a></td>
+        <td style="width: 230px;"><a class="btn btn-primary" style="width: 200px; background-color:whitesmoke; color: black;" href="/countries/{{ coun.location }}/delete">Delete</a></td>
     </tr>
 </div>
 {% endfor %}

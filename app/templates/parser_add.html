@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+{% if message %}
+<div class="alert alert-{{color}}"  style=" margin-left: 20px; max-width: 800px;" role="alert" >{{ message }}</div>
+{% endif %}
+<form class="form" style="margin-left: 30px" action="" method="post">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="text">Engine</label>
+    <div class="col-sm-10">
+    <input class="text-input" class="form-control" style="width: 400px;" type="text-box" name="engine">
+    </div>
+    </div>
+
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="key">icon</label>
+    <div class="col-sm-10">
+    <input class="text-input" class="form-control" style="width: 400px;"" type="text" name="icon">
+    </div>
+    </div>
+
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="key">Images</label>
+    <div class="col-sm-10">
+    <input class="form-check-input" class="form-control"  type="checkbox" name="img">
+    </div>
+    </div>
+    
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="key">Text</label>
+    <div class="col-sm-10">
+    <input class="form-check-input" class="form-control"  type="checkbox" name="text">
+    </div>
+    </div>
+    
+    <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="key">Videos</label>
+    <div class="col-sm-10">
+    <input class="form-check-input" class="form-control"  type="checkbox" name="video">
+    </div>
+    </div>
+
+
+    </p>
+    <p>
+    <input  class="form-button" type="submit" value="Save">
+    </p>
+</form>
+{% endblock %}

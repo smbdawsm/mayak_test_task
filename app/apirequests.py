@@ -2,28 +2,43 @@ from flask import render_template, redirect, request
 from app.lntranslator import translate_this, get_all_languages
 from app import app
 from app.monitor import monitoring_service
-from app.models import Country, Type_Of_Server, Server, Language
+from app.models import Country, Type_Of_Server, Server, Language, Monitor
 from flask import jsonify
 import flask
 import json
 from datetime import datetime
+
+from flask_cors import cross_origin, CORS
+
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+
+API_KEY = '84fi2j4lfk42fj204u2lkfnsdjsak433'
+
 #######################################
 ######### Block Countries #############
 
+
 @app.route('/api/country/all', methods=['get'])
+@cross_origin()
 def get_all_coutries():
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     '''Выводит список стран с инфраструктурой '''
-    all_countries = Country.objects.all()
+    all_countries = Monitor.objects.all()
     res = {}
     for coun in all_countries:
-        res[coun.name] = coun.to_json()
+        if coun.alive == True and coun.type_server == 'gtn_farhub':
+            res[coun.location] = coun.to_json()
     return json.dumps(res, indent=1, sort_keys=True, default=str)
 
-@app.route('/api/country/select', methods=['get'])
+@app.route('/api/country/select', methods=['post'])
+@cross_origin()
 def get_country():
     ''' Выводит инфраструктуру с поисковиками и переводчиками по стране '''
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     json_data = request.get_json(force=True)
-    print(json_data['country'])
     try: 
         country = Country.objects.get(name=json_data['country'])
         response = country.to_json_on_front()
@@ -32,8 +47,11 @@ def get_country():
         return f'{datetime.now()} Incorrect Query! ERROR in app: Exception on /api/country/select [GET] \n{err}', 400
 
 @app.route("/api/country/add/<country_name>", methods=["get"]) 
+@cross_origin()
 def create_country(country_name):
     '''Создает страну'''
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     if country_name is None or not country_name:
         return 'Incorrect Query'
     try:
@@ -49,8 +67,11 @@ def create_country(country_name):
 
 
 @app.route('/api/server/all', methods=['get'])
+@cross_origin()
 def get_all_servers():
     '''Выдает информацию о всех серверах'''
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     all_servers = {}
     for srv in Server.objects.all():
         all_servers[srv.hash_id] = srv.to_json()
@@ -60,26 +81,38 @@ def get_all_servers():
 ############## Block Translate ###############
 
 @app.route('/api/translate_query', methods=['post'])
+@cross_origin()
 def translate_api():
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     json_data = request.get_json(force=True)
     json_data['query'] = translate_this(json_data['query'], src_lang=json_data['src_lang'], to_lang=json_data['to_lang']) 
     return jsonify(json_data)
     
 @app.route('/api/translate/all', methods=['get'])
+@cross_origin()
 def all_lang_list():
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     return jsonify(get_all_languages())
 
 ##############################################
 ############## Block Langs ###################
 
 @app.route('/api/langs/<name>', methods=['get'])
+@cross_origin()
 def return_langs_list_for_country(name):
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     country = Country.objects.get(name=name)
     response = country.lang_return()
     return jsonify(response)
 
 @app.route('/api/langs/<short>/<full>/<name>', methods=['get'])
+@cross_origin()
 def add_language(short, full, name):
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     lang = Language(short=short, full=full, name=name)
     lang.save()
     return '200 OK'
@@ -88,8 +121,11 @@ def add_language(short, full, name):
 ############## Block Groups ################### 
 
 @app.route("/api/groups/<tosname>", methods=["get"])
+@cross_origin()
 def create_group(tosname):
     """Создает группу для серверов"""
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     if tosname is None or not tosname:
         return 'Incorrect Query'
     tos = Type_Of_Server(type_of_server=tosname)
@@ -99,9 +135,12 @@ def create_group(tosname):
 ###############################################
 ############## GTN FARHUB ##################### 
 
-@app.route("/gtnfarhub/countries/add", methods=["get"])
+@app.route("/gtnfarhub/countries/add", methods=["post"])
+@cross_origin()
 def create_server():
     '''Создает сервер типа farhub '''
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     json_data = request.get_json(force=True)
 
     try: 
@@ -128,17 +167,23 @@ def create_server():
         return '200 OK'
 
 @app.route('/gtnfarhub/countries/show', methods = ['get'])
+@cross_origin()
 def show_gntfarhubs():
     '''Показывает gtnfarhub по странам'''
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     all_countries = Country.objects.all()
     res = {}
     for coun in all_countries:
         res[coun.name] = [srv.for_farhub() for srv in coun.servers]
     return flask.jsonify(res), 200
 
-@app.route('/gtnfarhub/server/delete', methods = ['get'])
+@app.route('/gtnfarhub/server/delete', methods = ['post'])
+@cross_origin()
 def delete_farhub():
     '''удаляет сервер gtnfarhub'''
+    if (API_KEY != request.args.get('api')):
+        return jsonify({'error': 'Wrong api key'}), 400
     json_data = request.get_json(force=True)
     try:
         srv = Server.objects.get(hash_id=json_data['hash_id'])
